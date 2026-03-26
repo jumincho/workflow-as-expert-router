@@ -1,0 +1,411 @@
+{
+  "runs": {
+    "masrouter": "/workspace/wae_router_pilot/runs/round7r2_s1_masrouter_balanced",
+    "wae_dynamic": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_dynamic",
+    "wae_static_cheap": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_static_cheap",
+    "wae_static_premium": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_static_premium",
+    "wae_dynamic_no_premium": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_dynamic_no_premium",
+    "wae_dynamic_hardcase_gate": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_dynamic_hardcase_gate",
+    "wae_cheap_first_escalate": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_cheap_first_escalate",
+    "wae_dynamic_control_forced_io": "/workspace/wae_router_pilot/runs/round7r2_s1_wae_dynamic_control_forced_io_general",
+    "masrouter_cheap": "/workspace/wae_router_pilot/runs/round7r2_s1_masrouter_cheap",
+    "masrouter_balanced": "/workspace/wae_router_pilot/runs/round7r2_s1_masrouter_balanced",
+    "masrouter_premium": "/workspace/wae_router_pilot/runs/round7r2_s1_masrouter_premium"
+  },
+  "datasets": {
+    "mbpp_eval": {
+      "masrouter": {
+        "acc": 0.825,
+        "cost": 0.0007471729999999972,
+        "lat_p50": 17.905165135860443,
+        "lat_p95": 52.84838350415229,
+        "router_overhead_p50": 0.010882377624511719,
+        "llm_infer_p50": 17.830837190151215,
+        "test_exec_p50": 0.034206509590148926,
+        "calls": 280
+      },
+      "wae_dynamic": {
+        "acc": 0.7875,
+        "cost": 0.000270175,
+        "lat_p50": 7.827547550201416,
+        "lat_p95": 14.239141696691506,
+        "router_overhead_p50": 5.062150478363037,
+        "llm_infer_p50": 2.234360098838806,
+        "test_exec_p50": 0.02994149923324585,
+        "calls": 160
+      },
+      "wae_static_cheap": {
+        "acc": 0.875,
+        "cost": 0.0002785725,
+        "lat_p50": 7.671281337738037,
+        "lat_p95": 13.030088585615157,
+        "router_overhead_p50": 5.082306504249573,
+        "llm_infer_p50": 2.4679654836654663,
+        "test_exec_p50": 0.032455265522003174,
+        "calls": 172
+      },
+      "wae_static_premium": {
+        "acc": 0.825,
+        "cost": 0.00048708500000000054,
+        "lat_p50": 11.472598314285278,
+        "lat_p95": 44.45158301591872,
+        "router_overhead_p50": 6.606090664863586,
+        "llm_infer_p50": 2.746719479560852,
+        "test_exec_p50": 0.029032468795776367,
+        "calls": 356
+      },
+      "wae_dynamic_no_premium": {
+        "acc": 0.775,
+        "cost": 0.0002568874999999995,
+        "lat_p50": 7.4714760184288025,
+        "lat_p95": 18.006513273715967,
+        "router_overhead_p50": 4.55841451883316,
+        "llm_infer_p50": 2.0937215089797974,
+        "test_exec_p50": 0.03463184833526611,
+        "calls": 160
+      },
+      "wae_dynamic_hardcase_gate": {
+        "acc": 0.7875,
+        "cost": 0.0003181000000000001,
+        "lat_p50": 7.946079194545746,
+        "lat_p95": 16.458697301149368,
+        "router_overhead_p50": 5.2030118107795715,
+        "llm_infer_p50": 2.7662525177001953,
+        "test_exec_p50": 0.030131816864013672,
+        "calls": 402
+      },
+      "wae_cheap_first_escalate": {
+        "acc": 0.8875,
+        "cost": 0.0004009975,
+        "lat_p50": 9.492918908596039,
+        "lat_p95": 34.46407226920125,
+        "router_overhead_p50": 6.078983962535858,
+        "llm_infer_p50": 2.484394073486328,
+        "test_exec_p50": 0.034918129444122314,
+        "calls": 214
+      },
+      "wae_dynamic_control_forced_io": {
+        "acc": 0.7625,
+        "cost": 0.0002405825,
+        "lat_p50": 7.124340236186981,
+        "lat_p95": 12.804310649633404,
+        "router_overhead_p50": 3.900498867034912,
+        "llm_infer_p50": 2.0720157623291016,
+        "test_exec_p50": 0.03237771987915039,
+        "calls": 160
+      },
+      "masrouter_cheap": {
+        "acc": 0.7875,
+        "cost": 0.0005375119999999989,
+        "lat_p50": 11.79242342710495,
+        "lat_p95": 37.60261945724485,
+        "router_overhead_p50": 0.010718226432800293,
+        "llm_infer_p50": 11.748833656311035,
+        "test_exec_p50": 0.03453552722930908,
+        "calls": 200
+      },
+      "masrouter_balanced": {
+        "acc": 0.825,
+        "cost": 0.0007471729999999972,
+        "lat_p50": 17.905165135860443,
+        "lat_p95": 52.84838350415229,
+        "router_overhead_p50": 0.010882377624511719,
+        "llm_infer_p50": 17.830837190151215,
+        "test_exec_p50": 0.034206509590148926,
+        "calls": 280
+      },
+      "masrouter_premium": {
+        "acc": 0.8,
+        "cost": 0.0011131399999999977,
+        "lat_p50": 31.033579409122467,
+        "lat_p95": 76.70259989500045,
+        "router_overhead_p50": 0.01079946756362915,
+        "llm_infer_p50": 30.662479639053345,
+        "test_exec_p50": 0.03462773561477661,
+        "calls": 360
+      }
+    },
+    "humaneval_eval": {
+      "masrouter": {
+        "acc": 0.7625,
+        "cost": 0.0015345700000000025,
+        "lat_p50": 32.78175127506256,
+        "lat_p95": 78.45171210169786,
+        "router_overhead_p50": 0.010935366153717041,
+        "llm_infer_p50": 32.73598778247833,
+        "test_exec_p50": 0.03412240743637085,
+        "calls": 280
+      },
+      "wae_dynamic": {
+        "acc": 0.8875,
+        "cost": 0.0003721650000000005,
+        "lat_p50": 47.26348793506622,
+        "lat_p95": 68.03851809501647,
+        "router_overhead_p50": 43.88064754009247,
+        "llm_infer_p50": 2.7190206050872803,
+        "test_exec_p50": 0.21856379508972168,
+        "calls": 160
+      },
+      "wae_static_cheap": {
+        "acc": 0.8375,
+        "cost": 0.0004364374999999999,
+        "lat_p50": 9.464349210262299,
+        "lat_p95": 21.874490678310394,
+        "router_overhead_p50": 5.93283623456955,
+        "llm_infer_p50": 2.7186554670333862,
+        "test_exec_p50": 0.03477597236633301,
+        "calls": 175
+      },
+      "wae_static_premium": {
+        "acc": 0.8375,
+        "cost": 0.0015932999999999932,
+        "lat_p50": 34.967170000076294,
+        "lat_p95": 73.69269850850104,
+        "router_overhead_p50": 26.090499460697174,
+        "llm_infer_p50": 7.649930477142334,
+        "test_exec_p50": 0.028686225414276123,
+        "calls": 365
+      },
+      "wae_dynamic_no_premium": {
+        "acc": 0.875,
+        "cost": 0.00038854250000000046,
+        "lat_p50": 7.647517025470734,
+        "lat_p95": 19.722759163379656,
+        "router_overhead_p50": 4.877203285694122,
+        "llm_infer_p50": 2.408169746398926,
+        "test_exec_p50": 0.030095934867858887,
+        "calls": 160
+      },
+      "wae_dynamic_hardcase_gate": {
+        "acc": 0.8625,
+        "cost": 0.00048139249999999993,
+        "lat_p50": 8.24542361497879,
+        "lat_p95": 28.340463095903377,
+        "router_overhead_p50": 5.520997166633606,
+        "llm_infer_p50": 2.3687238693237305,
+        "test_exec_p50": 0.03400850296020508,
+        "calls": 372
+      },
+      "wae_cheap_first_escalate": {
+        "acc": 0.925,
+        "cost": 0.0006989924999999989,
+        "lat_p50": 10.01483166217804,
+        "lat_p95": 50.824917483329706,
+        "router_overhead_p50": 6.7272984981536865,
+        "llm_infer_p50": 2.668395519256592,
+        "test_exec_p50": 0.0350496768951416,
+        "calls": 216
+      },
+      "wae_dynamic_control_forced_io": {
+        "acc": 0.8875,
+        "cost": 0.000369435,
+        "lat_p50": 7.586993217468262,
+        "lat_p95": 17.57200620770454,
+        "router_overhead_p50": 4.718643307685852,
+        "llm_infer_p50": 2.4090496301651,
+        "test_exec_p50": 0.030429601669311523,
+        "calls": 160
+      },
+      "masrouter_cheap": {
+        "acc": 0.8375,
+        "cost": 0.0009234504999999984,
+        "lat_p50": 20.738341212272644,
+        "lat_p95": 41.07504264712334,
+        "router_overhead_p50": 0.010845959186553955,
+        "llm_infer_p50": 20.69039362668991,
+        "test_exec_p50": 0.0349961519241333,
+        "calls": 200
+      },
+      "masrouter_balanced": {
+        "acc": 0.7625,
+        "cost": 0.0015345700000000025,
+        "lat_p50": 32.78175127506256,
+        "lat_p95": 78.45171210169786,
+        "router_overhead_p50": 0.010935366153717041,
+        "llm_infer_p50": 32.73598778247833,
+        "test_exec_p50": 0.03412240743637085,
+        "calls": 280
+      },
+      "masrouter_premium": {
+        "acc": 0.725,
+        "cost": 0.002340802999999999,
+        "lat_p50": 55.7703001499176,
+        "lat_p95": 114.04033577442166,
+        "router_overhead_p50": 0.010851085186004639,
+        "llm_infer_p50": 55.72429084777832,
+        "test_exec_p50": 0.03326696157455444,
+        "calls": 360
+      }
+    }
+  },
+  "iso_cost": {
+    "mbpp_eval": {
+      "method": "linear_interpolation",
+      "comparable": true,
+      "tolerance": 0.05,
+      "envelope_size": 5,
+      "candidate_baselines": [
+        "wae_cheap_first_escalate",
+        "wae_dynamic",
+        "wae_dynamic_control_forced_io",
+        "wae_dynamic_no_premium",
+        "wae_static_cheap"
+      ],
+      "reference": {
+        "type": "interpolated",
+        "estimated_acc": 0.8790358893199919,
+        "lower": {
+          "name": "wae_static_cheap",
+          "cost": 0.0002785725,
+          "acc": 0.875
+        },
+        "upper": {
+          "name": "wae_cheap_first_escalate",
+          "cost": 0.0004009975,
+          "acc": 0.8875
+        }
+      },
+      "delta_acc": -0.0915358893199919,
+      "pass_0.03": false
+    },
+    "humaneval_eval": {
+      "method": "linear_interpolation",
+      "comparable": true,
+      "tolerance": 0.05,
+      "envelope_size": 2,
+      "candidate_baselines": [
+        "wae_cheap_first_escalate",
+        "wae_dynamic_control_forced_io"
+      ],
+      "reference": {
+        "type": "interpolated",
+        "estimated_acc": 0.9002395257276803,
+        "lower": {
+          "name": "wae_dynamic_control_forced_io",
+          "cost": 0.000369435,
+          "acc": 0.8875
+        },
+        "upper": {
+          "name": "wae_cheap_first_escalate",
+          "cost": 0.0006989924999999989,
+          "acc": 0.925
+        }
+      },
+      "delta_acc": -0.037739525727680245,
+      "pass_0.03": false
+    }
+  },
+  "dominance": {
+    "mbpp_eval": {
+      "dominated_on_cost_acc": true,
+      "dominated_by_cost_acc": [
+        "wae_dynamic",
+        "wae_static_cheap"
+      ],
+      "dominated_on_cost_acc_p50lat": true,
+      "dominated_by_cost_acc_p50lat": [
+        "wae_dynamic",
+        "wae_static_cheap"
+      ]
+    },
+    "humaneval_eval": {
+      "dominated_on_cost_acc": true,
+      "dominated_by_cost_acc": [
+        "wae_dynamic",
+        "wae_dynamic_control_forced_io",
+        "wae_dynamic_no_premium"
+      ],
+      "dominated_on_cost_acc_p50lat": true,
+      "dominated_by_cost_acc_p50lat": [
+        "wae_dynamic_control_forced_io",
+        "wae_dynamic_no_premium"
+      ]
+    }
+  },
+  "verdict": {
+    "mbpp_eval": {
+      "pass": false,
+      "reason": "dominated_by_baseline",
+      "dominance_first": true,
+      "requires_iso_cost_check": false
+    },
+    "humaneval_eval": {
+      "pass": false,
+      "reason": "dominated_by_baseline",
+      "dominance_first": true,
+      "requires_iso_cost_check": false
+    }
+  },
+  "budget_analysis": {
+    "mbpp_eval": [
+      {
+        "budget": 0.00026,
+        "best_mode": "wae_dynamic_no_premium",
+        "best_acc": 0.775,
+        "num_feasible": 2,
+        "feasible_acc_by_mode": {
+          "wae_dynamic_control_forced_io": 0.7625,
+          "wae_dynamic_no_premium": 0.775
+        }
+      },
+      {
+        "budget": 0.0003,
+        "best_mode": "wae_static_cheap",
+        "best_acc": 0.875,
+        "num_feasible": 4,
+        "feasible_acc_by_mode": {
+          "wae_dynamic": 0.7875,
+          "wae_dynamic_control_forced_io": 0.7625,
+          "wae_dynamic_no_premium": 0.775,
+          "wae_static_cheap": 0.875
+        }
+      },
+      {
+        "budget": 0.0004,
+        "best_mode": "wae_static_cheap",
+        "best_acc": 0.875,
+        "num_feasible": 5,
+        "feasible_acc_by_mode": {
+          "wae_dynamic": 0.7875,
+          "wae_dynamic_control_forced_io": 0.7625,
+          "wae_dynamic_hardcase_gate": 0.7875,
+          "wae_dynamic_no_premium": 0.775,
+          "wae_static_cheap": 0.875
+        }
+      }
+    ],
+    "humaneval_eval": [
+      {
+        "budget": 0.00026,
+        "best_mode": null,
+        "best_acc": null,
+        "num_feasible": 0,
+        "feasible_acc_by_mode": {}
+      },
+      {
+        "budget": 0.0003,
+        "best_mode": null,
+        "best_acc": null,
+        "num_feasible": 0,
+        "feasible_acc_by_mode": {}
+      },
+      {
+        "budget": 0.0004,
+        "best_mode": "wae_dynamic",
+        "best_acc": 0.8875,
+        "num_feasible": 3,
+        "feasible_acc_by_mode": {
+          "wae_dynamic": 0.8875,
+          "wae_dynamic_control_forced_io": 0.8875,
+          "wae_dynamic_no_premium": 0.875
+        }
+      }
+    ]
+  },
+  "criterion": "dominance-first then +0.03 acc at iso-cost",
+  "settings": {
+    "iso_tolerance": 0.05,
+    "allow_interpolation": true,
+    "budget_points": "0.00026,0.00030,0.00040"
+  }
+}

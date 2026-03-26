@@ -1,0 +1,10 @@
+train_samples: 64
+test_samples_mbpp: 80
+test_samples_humaneval: 80
+epochs: 1
+batch_size: 4
+cost_rate: 300.0
+max_agent: 4
+calibration_size: 64
+calibration_mix: mixed
+seed: 1234

@@ -1,0 +1,29 @@
+models:
+  local-general:
+    model_id: Qwen/Qwen2.5-0.5B-Instruct
+    base_url: http://127.0.0.1:8003/v1
+    api_key_env: VLLM_API_KEY
+    api_key: EMPTY
+    timeout: 120
+    price:
+      input: 0.08
+      output: 0.08
+  local-coder:
+    model_id: Qwen/Qwen2.5-0.5B-Instruct
+    base_url: http://127.0.0.1:8003/v1
+    api_key_env: VLLM_API_KEY
+    api_key: EMPTY
+    timeout: 120
+    price:
+      input: 0.08
+      output: 0.08
+  local-math:
+    model_id: Qwen/Qwen2.5-0.5B-Instruct
+    base_url: http://127.0.0.1:8003/v1
+    api_key_env: VLLM_API_KEY
+    api_key: EMPTY
+    timeout: 120
+    price:
+      input: 0.08
+      output: 0.08
+
