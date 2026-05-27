@@ -5,11 +5,16 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${ROOT_DIR}"
 source "${ROOT_DIR}/.venv/bin/activate"
 
+WAE_ROUTER_PILOT_ROOT="${WAE_ROUTER_PILOT_ROOT:-${ROOT_DIR}}"
+MASROUTER_PATH="${MASROUTER_PATH:-/workspace/masrouter}"
+export WAE_ROUTER_PILOT_ROOT MASROUTER_PATH
+
 export VLLM_API_KEY="${VLLM_API_KEY:-EMPTY}"
-export PYTHONPATH="/workspace/wae_router_pilot:/workspace/masrouter:${PYTHONPATH:-}"
+export PYTHONPATH="${WAE_ROUTER_PILOT_ROOT}:${MASROUTER_PATH}:${PYTHONPATH:-}"
 
 STAMP="${1:-$(date +%Y%m%d_%H%M%S)}"
 CFG="${ROOT_DIR}/config/model_endpoints_3x7b.yaml"
+RUNS_DIR="${WAE_ROUTER_PILOT_ROOT}/runs"
 
 COMMON_ARGS=(
   --train_samples 24
@@ -35,11 +40,11 @@ python -m src.run_pilot --mode wae_static_cheap "${COMMON_ARGS[@]}" --run_id "pi
 python -m src.run_pilot --mode wae_static_premium "${COMMON_ARGS[@]}" --force_workflow_id wf_gen3_test_select_coder --run_id "pilot7b_wae_static_premium_${STAMP}"
 
 python -m src.compare_runs \
-  --masrouter_run "/workspace/wae_router_pilot/runs/pilot7b_masrouter_${STAMP}" \
-  --wae_dynamic_run "/workspace/wae_router_pilot/runs/pilot7b_wae_dynamic_${STAMP}" \
-  --wae_static_cheap_run "/workspace/wae_router_pilot/runs/pilot7b_wae_static_cheap_${STAMP}" \
-  --wae_static_premium_run "/workspace/wae_router_pilot/runs/pilot7b_wae_static_premium_${STAMP}" \
+  --masrouter_run "${RUNS_DIR}/pilot7b_masrouter_${STAMP}" \
+  --wae_dynamic_run "${RUNS_DIR}/pilot7b_wae_dynamic_${STAMP}" \
+  --wae_static_cheap_run "${RUNS_DIR}/pilot7b_wae_static_cheap_${STAMP}" \
+  --wae_static_premium_run "${RUNS_DIR}/pilot7b_wae_static_premium_${STAMP}" \
   --iso_tolerance 0.05 \
-  --out_prefix "/workspace/wae_router_pilot/runs/pilot7b_compare_${STAMP}"
+  --out_prefix "${RUNS_DIR}/pilot7b_compare_${STAMP}"
 
 echo "Completed expanded run set stamp=${STAMP}"

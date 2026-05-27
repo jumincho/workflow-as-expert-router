@@ -39,8 +39,17 @@ def nearest_iso_cost_delta(target: Dict[str, float], cands: List[Dict[str, float
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--runs_root", type=str, default="/workspace/wae_router_pilot/runs")
-    p.add_argument("--output", type=str, default="/workspace/wae_router_pilot/runs/analysis_latest.json")
+    _wae_root = os.environ.get("WAE_ROUTER_PILOT_ROOT", "/workspace/wae_router_pilot")
+    p.add_argument(
+        "--runs_root",
+        type=str,
+        default=os.environ.get("WAE_RUNS_ROOT", f"{_wae_root}/runs"),
+    )
+    p.add_argument(
+        "--output",
+        type=str,
+        default=os.environ.get("WAE_ANALYSIS_OUTPUT", f"{_wae_root}/runs/analysis_latest.json"),
+    )
     args = p.parse_args()
 
     modes = ["masrouter", "wae_dynamic", "wae_static_cheap", "wae_static_premium"]

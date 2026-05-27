@@ -26,8 +26,13 @@ import yaml
 from datasets import load_dataset
 from loguru import logger
 
-# Keep /workspace/masrouter untouched and consume as dependency.
-sys.path.append("/workspace/masrouter")
+# WaE-Router consumes the upstream MasRouter (MAR) package without
+# vendoring it. Default to /workspace/masrouter for the original
+# author's host layout; override with the MASROUTER_PATH environment
+# variable on any other machine.
+_masrouter_path = os.environ.get("MASROUTER_PATH", "/workspace/masrouter")
+if _masrouter_path not in sys.path:
+    sys.path.append(_masrouter_path)
 
 from MAR.MasRouter.mas_router import MasRouter
 from MAR.Utils.globals import CompletionTokens, Cost, PromptTokens
@@ -116,8 +121,22 @@ def parse_args() -> Tuple[argparse.Namespace, argparse.ArgumentParser]:
         default="",
         help="Comma-separated workflow budget tiers to exclude (e.g., premium).",
     )
-    p.add_argument("--model_endpoints", type=str, default="/workspace/wae_router_pilot/config/model_endpoints.yaml")
-    p.add_argument("--experiment_config", type=str, default="/workspace/wae_router_pilot/config/experiment.yaml")
+    p.add_argument(
+        "--model_endpoints",
+        type=str,
+        default=os.environ.get(
+            "WAE_MODEL_ENDPOINTS",
+            f"{os.environ.get('WAE_ROUTER_PILOT_ROOT', '/workspace/wae_router_pilot')}/config/model_endpoints.yaml",
+        ),
+    )
+    p.add_argument(
+        "--experiment_config",
+        type=str,
+        default=os.environ.get(
+            "WAE_EXPERIMENT_CONFIG",
+            f"{os.environ.get('WAE_ROUTER_PILOT_ROOT', '/workspace/wae_router_pilot')}/config/experiment.yaml",
+        ),
+    )
     p.add_argument("--run_id", type=str, default=None)
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--no_fallback", action="store_true")
@@ -192,7 +211,8 @@ def load_exp_config(path: str) -> Dict[str, object]:
 
 
 def setup_run_dirs(run_id: str) -> Dict[str, str]:
-    root = f"/workspace/wae_router_pilot/runs/{run_id}"
+    wae_root = os.environ.get("WAE_ROUTER_PILOT_ROOT", "/workspace/wae_router_pilot")
+    root = f"{wae_root}/runs/{run_id}"
     dirs = {
         "root": root,
         "logs": os.path.join(root, "logs"),
@@ -1566,8 +1586,9 @@ def main() -> None:
     runtime_patch = LLMRuntimePatch(endpoint_manager)
     runtime_patch.install()
     patch_sentence_encoder_outputs()
-    # MasRouter code uses project-relative paths such as "MAR/Roles".
-    os.chdir("/workspace/masrouter")
+    # MasRouter code uses project-relative paths such as "MAR/Roles", so
+    # the runner cwd must be the MasRouter checkout root.
+    os.chdir(os.environ.get("MASROUTER_PATH", "/workspace/masrouter"))
 
     train_mbpp, test_mbpp = load_mbpp_samples(args.train_samples, args.test_samples_mbpp)
     if args.inject_tests_into_humaneval_query:
@@ -1578,8 +1599,9 @@ def main() -> None:
         test_humaneval = load_humaneval_samples(args.test_samples_humaneval)
     tasks = TASKS_PROFILE
     reasonings = REASONING_PROFILE
-    prompt_file = "/workspace/masrouter/MAR/Roles/FinalNode/mbpp.json"
-    prompt_file_humaneval = "/workspace/masrouter/MAR/Roles/FinalNode/humaneval.json"
+    _mar_root = os.environ.get("MASROUTER_PATH", "/workspace/masrouter")
+    prompt_file = f"{_mar_root}/MAR/Roles/FinalNode/mbpp.json"
+    prompt_file_humaneval = f"{_mar_root}/MAR/Roles/FinalNode/humaneval.json"
 
     monitor.set_stage("router_init")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

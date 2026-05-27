@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="/workspace/wae_router_pilot/runs"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ROOT_DIR="${WAE_RUNS_ROOT:-${WAE_ROUTER_PILOT_ROOT:-${REPO_ROOT}}/runs}"
 MODE="dry-run"
 PRUNE_CHECKPOINT_PATTERN="pilot6h_*"
 

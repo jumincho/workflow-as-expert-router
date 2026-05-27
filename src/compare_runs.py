@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -283,7 +284,14 @@ def main() -> None:
         type=str,
         help="Mode name to evaluate against baselines (default: wae_dynamic).",
     )
-    p.add_argument("--out_prefix", default="/workspace/wae_router_pilot/runs/pilot6h_compare", type=str)
+    p.add_argument(
+        "--out_prefix",
+        default=os.environ.get(
+            "WAE_COMPARE_OUT_PREFIX",
+            f"{os.environ.get('WAE_ROUTER_PILOT_ROOT', '/workspace/wae_router_pilot')}/runs/pilot6h_compare",
+        ),
+        type=str,
+    )
     p.add_argument("--iso_tolerance", default=0.05, type=float)
     p.add_argument("--disable_interpolation", action="store_true")
     p.add_argument(

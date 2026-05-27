@@ -5,9 +5,14 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 source "${ROOT_DIR}/.venv/bin/activate"
 
-export PYTHONPATH="/workspace/wae_router_pilot:/workspace/masrouter:${PYTHONPATH:-}"
+WAE_ROUTER_PILOT_ROOT="${WAE_ROUTER_PILOT_ROOT:-${ROOT_DIR}}"
+MASROUTER_PATH="${MASROUTER_PATH:-/workspace/masrouter}"
+export WAE_ROUTER_PILOT_ROOT MASROUTER_PATH
+
+export PYTHONPATH="${WAE_ROUTER_PILOT_ROOT}:${MASROUTER_PATH}:${PYTHONPATH:-}"
 export VLLM_API_KEY="${VLLM_API_KEY:-EMPTY}"
 export LOGURU_LEVEL="${LOGURU_LEVEL:-INFO}"
+RUNS_DIR="${WAE_ROUTER_PILOT_ROOT}/runs"
 
 CFG="${CFG:-${ROOT_DIR}/config/model_endpoints_3x7b.yaml}"
 PREFIX="${PREFIX:-round5a_$(date +%m%d_%H%M%S)}"
@@ -48,8 +53,8 @@ if [[ "${STAGEA_ROUTER_DETERMINISTIC}" == "1" ]]; then
   EXTRA_ARGS+=(--deterministic_router_components)
 fi
 
-PARETO_CACHE="/workspace/wae_router_pilot/runs/${PREFIX}_pareto_cache.json"
-echo "${PREFIX}" > /workspace/wae_router_pilot/runs/round5a_latest_prefix.txt
+PARETO_CACHE="${RUNS_DIR}/${PREFIX}_pareto_cache.json"
+echo "${PREFIX}" > "${RUNS_DIR}/round5a_latest_prefix.txt"
 echo "StageA prefix=${PREFIX}"
 echo "StageA reps/train/cal/test_he/max_agent=${STAGEA_REPS}/${STAGEA_TRAIN}/${STAGEA_CAL}/${STAGEA_TEST_HE}/${STAGEA_MAX_AGENT}"
 
@@ -77,8 +82,9 @@ import json
 import os
 from pathlib import Path
 
-prefix = Path("/workspace/wae_router_pilot/runs/round5a_latest_prefix.txt").read_text().strip()
-runs_root = "/workspace/wae_router_pilot/runs"
+WAE_ROOT = os.environ.get("WAE_ROUTER_PILOT_ROOT", "/workspace/wae_router_pilot")
+runs_root = f"{WAE_ROOT}/runs"
+prefix = Path(f"{runs_root}/round5a_latest_prefix.txt").read_text().strip()
 modes = ["wae_static_cheap", "wae_dynamic_no_premium", "wae_dynamic"]
 
 

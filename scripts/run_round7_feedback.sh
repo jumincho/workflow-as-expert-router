@@ -5,7 +5,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 source "${ROOT_DIR}/.venv/bin/activate"
 
-export PYTHONPATH="/workspace/wae_router_pilot:/workspace/masrouter:${PYTHONPATH:-}"
+WAE_ROUTER_PILOT_ROOT="${WAE_ROUTER_PILOT_ROOT:-${ROOT_DIR}}"
+MASROUTER_PATH="${MASROUTER_PATH:-/workspace/masrouter}"
+export WAE_ROUTER_PILOT_ROOT MASROUTER_PATH
+
+export PYTHONPATH="${WAE_ROUTER_PILOT_ROOT}:${MASROUTER_PATH}:${PYTHONPATH:-}"
 export VLLM_API_KEY="${VLLM_API_KEY:-EMPTY}"
 export LOGURU_LEVEL="${LOGURU_LEVEL:-INFO}"
 export CUBLAS_WORKSPACE_CONFIG="${CUBLAS_WORKSPACE_CONFIG:-:4096:8}"
@@ -53,7 +57,7 @@ AUTO_RELEASE_GPU_ON_EXIT="${AUTO_RELEASE_GPU_ON_EXIT:-1}"
 VLLM_RELEASE_PORTS="${VLLM_RELEASE_PORTS:-8000 8001 8002}"
 GPU_RELEASE_GRACE_S="${GPU_RELEASE_GRACE_S:-8}"
 
-RUNS_ROOT="/workspace/wae_router_pilot/runs"
+RUNS_ROOT="${WAE_RUNS_ROOT:-${WAE_ROUTER_PILOT_ROOT}/runs}"
 mkdir -p "${RUNS_ROOT}"
 ORCH_LOG="${RUNS_ROOT}/${ROUND_PREFIX}_orchestrator.log"
 FAIL_LOG="${RUNS_ROOT}/${ROUND_PREFIX}_failures.log"
@@ -420,7 +424,8 @@ import json
 import os
 from pathlib import Path
 
-runs_root = "/workspace/wae_router_pilot/runs"
+WAE_ROOT = os.environ.get("WAE_ROUTER_PILOT_ROOT", "/workspace/wae_router_pilot")
+runs_root = os.environ.get("WAE_RUNS_ROOT", f"{WAE_ROOT}/runs")
 prefix = os.environ.get("ROUND_PREFIX", "round7r1")
 seed_runs = sorted(glob.glob(f"{runs_root}/{prefix}_s*_compare_dynamic.json"))
 rows = []

@@ -90,6 +90,17 @@ bash setup_env.sh
 bash launch_vllm.sh   # 별도 서빙 환경이 떠 있어야 합니다
 ```
 
+원본 실행 환경의 절대 경로(`/workspace/wae_router_pilot`, `/workspace/masrouter`)는
+다음 환경변수로 덮어쓸 수 있습니다.
+
+| 환경변수 | 의미 | 기본값 |
+| --- | --- | --- |
+| `WAE_ROUTER_PILOT_ROOT` | 이 저장소의 루트 (run 산출물 위치) | `/workspace/wae_router_pilot` (또는 스크립트 위치 기준 자동) |
+| `MASROUTER_PATH` | 외부 MasRouter(`MAR`) 패키지 체크아웃 위치 | `/workspace/masrouter` |
+| `WAE_RUNS_ROOT` | run 결과 저장 디렉터리 | `${WAE_ROUTER_PILOT_ROOT}/runs` |
+
+`MAR` 패키지는 본 저장소에 포함되어 있지 않으며, requirements.txt 로도 설치되지 않습니다. 별도로 MasRouter 체크아웃을 마련한 뒤 `MASROUTER_PATH` 로 가리키는 것이 정상적인 셋업입니다.
+
 ## 상태
 
 🧊 **휴면 중** — 시스템 패턴 결론은 살아 있고, 동적 라우팅 결론은 더 좁게 다시 framing 해야 하는 상태입니다.
@@ -175,6 +186,18 @@ Endpoint configs read credentials from environment variables and do not embed th
 bash setup_env.sh
 bash launch_vllm.sh   # requires a separate vLLM serving environment up
 ```
+
+The absolute paths from the original execution environment
+(`/workspace/wae_router_pilot`, `/workspace/masrouter`) can be overridden via
+environment variables:
+
+| Variable | Meaning | Default |
+| --- | --- | --- |
+| `WAE_ROUTER_PILOT_ROOT` | This repo's root (where run outputs live) | `/workspace/wae_router_pilot` (or auto-detected from script location) |
+| `MASROUTER_PATH` | External MasRouter (`MAR`) package checkout | `/workspace/masrouter` |
+| `WAE_RUNS_ROOT` | Run output directory | `${WAE_ROUTER_PILOT_ROOT}/runs` |
+
+The `MAR` package is not vendored in this repository and is not installed via `requirements.txt`. The expected setup is a separate MasRouter checkout pointed to by `MASROUTER_PATH`.
 
 ### Status
 
