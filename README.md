@@ -1,4 +1,18 @@
+<div align="center">
+
 # workflow-as-expert-router
+
+**모델만 라우팅하지 말고 흐름(workflow)까지 라우팅하자**
+**Routing entire workflows, not just models, as the expert unit**
+
+![Status](https://img.shields.io/badge/status-dormant-lightgrey)
+![Language](https://img.shields.io/badge/language-Python-3776AB?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)
+![Closure](https://img.shields.io/badge/closure-2026--03-blue)
+
+**한국어** · [English](#english)
+
+</div>
 
 > 🧊 **휴면(dormant) 중인 연구 파일럿입니다.**
 
@@ -67,7 +81,7 @@
 └── launch_vllm.sh / setup_env.sh / stop_vllm.sh / run_expanded_7b.sh
 ```
 
-엔드포인트 설정은 자격증명을 직접 박지 않고 환경변수로만 주입하도록 돼 있습니다. 그대로 유지하시면 됩니다.
+엔드포인트 설정은 자격증명을 직접 박지 않고 환경변수로만 주입하도록 되어 있습니다.
 
 ## 환경
 
@@ -79,3 +93,93 @@ bash launch_vllm.sh   # 별도 서빙 환경이 떠 있어야 합니다
 ## 상태
 
 🧊 **휴면 중** — 시스템 패턴 결론은 살아 있고, 동적 라우팅 결론은 더 좁게 다시 framing 해야 하는 상태입니다.
+
+---
+
+<a name="english"></a>
+
+## English
+
+> 🧊 **Dormant research pilot.**
+
+### What this set out to test
+
+Modern LLM systems often pick which model handles a given query. This project pushed the unit of choice one level out: **choose not just the model but the workflow that solves it.**
+
+A workflow here means something like:
+
+- one-shot answer
+- answer-then-refine
+- generate several candidates, then compare
+- critique-then-rewrite
+
+Comparisons: existing model-level routing (no workflow choice), and static baselines that always use the same workflow. Evaluation ran on code-generation benchmarks (`MBPP`, `HumanEval`) measuring accuracy, cost, and latency together.
+
+### What it found
+
+- **Workflow-as-expert routing did show a real effect.** At matched accuracy, cost and latency dropped meaningfully against model-level routing; the result reproduced across rounds.
+- **The stronger claim — "dynamic workflow choice is the core driver" — did not close.** A surprisingly strong static baseline ("just use the one cheap workflow") often matched dynamic selection; the dynamic-only marginal gain was not stable.
+- So: **the systems pattern survives; the dynamic-routing headline does not.**
+
+Full numbers:
+
+- 🇰🇷 [`closure_reports/project_closure_report_ko_20260327.md`](closure_reports/project_closure_report_ko_20260327.md)
+- 🇬🇧 [`closure_reports/project_closure_report_20260327.md`](closure_reports/project_closure_report_20260327.md)
+
+### Why it's on hold
+
+The intended conclusion ("dynamic workflow routing cleanly beats static baselines") did not stand cleanly, and the final round did not run to completion. A restart would reframe the primary claim around "workflow-as-expert systems efficiency" and treat dynamic routing as a secondary hypothesis. Worth reopening when there is a clearer angle for the dynamic part.
+
+### Where to look first when revisiting
+
+- [`docs/EXPERIMENT_OVERVIEW.md`](docs/EXPERIMENT_OVERVIEW.md) — what was compared, exactly.
+- [`docs/HANDOFF_RUNBOOK.md`](docs/HANDOFF_RUNBOOK.md) — how to resume.
+- [`docs/KNOWN_ISSUES_AND_FIXES.md`](docs/KNOWN_ISSUES_AND_FIXES.md) — recurring pitfalls.
+- [`docs/PUBLISHING_GUIDE.md`](docs/PUBLISHING_GUIDE.md) — writeup notes for the narrowed framing.
+- [`status/`](status/) — last progress snapshot.
+- [`artifacts/reports/`](artifacts/reports/) — per-round reports (KO included).
+
+### Code map
+
+| File | What it does |
+|---|---|
+| [`src/run_pilot.py`](src/run_pilot.py) | Main experiment runner |
+| [`src/workflow_router_patch.py`](src/workflow_router_patch.py) | Router patch that routes by workflow rather than by model |
+| [`src/workflow_llm.py`](src/workflow_llm.py) | Wrapper that exposes a workflow as a single LLM-shaped callable |
+| [`src/workflow_profile.py`](src/workflow_profile.py) | Defines candidate workflows |
+| [`src/offline_pareto_builder.py`](src/offline_pareto_builder.py) | Precomputes the cost-quality Pareto of candidates offline |
+| [`src/compare_runs.py`](src/compare_runs.py) | Cost-matched comparison and report generation |
+| [`src/monitor.py`](src/monitor.py) | Run-state monitoring |
+
+### Folder map
+
+```
+.
+├── src/                       router patch / workflow wrapper / runner / comparison / monitor
+├── config/                    experiment + endpoint configs
+├── scripts/                   per-round run / resume scripts
+├── docs/                      overview / runbook / pitfalls / writeup guide
+├── status/                    last progress snapshot
+├── artifacts/reports/         round reports (KO / EN)
+├── artifacts/round7r2/        partial outputs from the last round
+├── artifacts/snapshots/       progress-snapshot JSONs
+├── closure_reports/           closure reports (KO / EN)
+└── launch_vllm.sh / setup_env.sh / stop_vllm.sh / run_expanded_7b.sh
+```
+
+Endpoint configs read credentials from environment variables and do not embed them in source.
+
+### Environment
+
+```bash
+bash setup_env.sh
+bash launch_vllm.sh   # requires a separate vLLM serving environment up
+```
+
+### Status
+
+🧊 **Dormant** — the systems-pattern finding survives; the dynamic-routing headline needs a narrower reframing.
+
+### License
+
+Released under [CC BY-NC 4.0](./LICENSE).
