@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /workspace/wae_router_pilot
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+cd "${REPO_ROOT}"
 source .venv/bin/activate
 
-export PYTHONPATH=/workspace/wae_router_pilot:/workspace/masrouter:${PYTHONPATH:-}
+WAE_ROUTER_PILOT_ROOT="${WAE_ROUTER_PILOT_ROOT:-${REPO_ROOT}}"
+MASROUTER_PATH="${MASROUTER_PATH:-/workspace/masrouter}"
+export WAE_ROUTER_PILOT_ROOT MASROUTER_PATH
+
+export PYTHONPATH="${WAE_ROUTER_PILOT_ROOT}:${MASROUTER_PATH}:${PYTHONPATH:-}"
 export ROUND_PREFIX=round7r2
 export RUN_STAGE_A=0
 export MAS_CURVE_ONLY_SEED1=1

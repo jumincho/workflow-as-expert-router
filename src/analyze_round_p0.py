@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -92,7 +93,13 @@ def oracle_from_static(
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--runs_root", default="/workspace/wae_router_pilot/runs")
+    ap.add_argument(
+        "--runs_root",
+        default=os.environ.get(
+            "WAE_RUNS_ROOT",
+            f"{os.environ.get('WAE_ROUTER_PILOT_ROOT', '/workspace/wae_router_pilot')}/runs",
+        ),
+    )
     ap.add_argument("--prefix", required=True, help="e.g., round6r1")
     ap.add_argument("--output_prefix", default="")
     ap.add_argument("--topk", type=int, default=20)
