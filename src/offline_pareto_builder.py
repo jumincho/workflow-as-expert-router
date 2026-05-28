@@ -1,4 +1,30 @@
-"""Offline Pareto library builder for role-conditioned workflow experts."""
+"""Offline Pareto library over candidate workflows, conditioned on role.
+
+Before training the router, we calibrate every candidate workflow on a
+shared mini-set drawn from MBPP and/or HumanEval and measure its
+(`pass_rate`, `avg_cost`, `avg_latency_s`) triple. Workflows that are
+strictly dominated on those three axes are dropped; the rest become the
+*Pareto front*.
+
+We then take that Pareto front and split it by which **MAR role** a
+workflow is allowed to serve (see `CODE_ROLES` in `workflow_profile.py`).
+The output is a JSON file with three things:
+
+- `workflow_metrics`     : the raw (pass_rate, cost, latency) for every
+                           candidate, plus its `budget_tier` and
+                           `allowed_roles`.
+- `pareto_front`         : the ids of the non-dominated workflows.
+- `role_pareto_library`  : `{role_name -> [pareto-eligible workflow ids
+                           for that role]}`. If no Pareto workflow is
+                           allowed for a role, the full Pareto front is
+                           returned as a safe fallback.
+
+`run_pilot.py` consumes this JSON as `pareto_library.json` to constrain
+the router to a sane operating frontier before training.
+
+The calibration sampler supports `mbpp`, `humaneval`, or `mixed` (50/50
+deterministic shuffle) — see GLOSSARY for benchmark notes.
+"""
 
 from __future__ import annotations
 
