@@ -1,4 +1,28 @@
-"""Lightweight monitor utilities for pilot execution."""
+"""Lightweight in-process monitor + a standalone status watcher.
+
+`PilotMonitor` lives inside `run_pilot.py` and writes a single
+`logs/status.json` per run, refreshed on each stage change, every step, and
+on every heartbeat. The status file is the only thing external observers
+(the watcher in this module, the snapshots under `status/` and
+`artifacts/snapshots/`) need to know whether the run is alive.
+
+What's tracked:
+
+- `stage`               : free-form label set by the runner (`train`,
+                          `eval_mbpp`, `eval_humaneval`, `completed`, ...).
+- `error_count`         : monotonic count of `record_error` calls.
+- rolling 20-step window of latency / cost / utility averages.
+- `gpu_snapshot`        : best-effort `nvidia-smi` output (returns
+                          `"nvidia-smi unavailable"` outside a GPU host).
+- `event` / `note`      : tag of the last write (`step`, `heartbeat`,
+                          `stage_change`, `error`).
+
+`watch_status(path, interval_sec)` is a tiny CLI that tails one of those
+status files and prints a one-line summary on each poll; that is what gets
+invoked indirectly via `python -m src.monitor --status_path ...`. The
+snapshots under `status/` and `artifacts/snapshots/` are *records* of what
+this file produced during round7r2; see GLOSSARY → "status/ snapshot format".
+"""
 
 from __future__ import annotations
 
@@ -130,4 +154,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
