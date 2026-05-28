@@ -1,4 +1,32 @@
-"""Compare pilot runs and emit iso-cost summary + plots."""
+"""Cost-matched comparison across pilot runs and report/plot generation.
+
+This is the official verdict-maker for a round. Given run directories for
+the masrouter baseline, the dynamic WaE router, the static WaE baselines,
+and any optional ablations, it:
+
+1. Loads each run's `metrics/summary.json` and extracts
+   (accuracy, avg cost, p50/p95 latency, per-stage latency, call count)
+   for each evaluation dataset (`mbpp_eval`, `humaneval_eval`).
+2. Computes the **baseline Pareto envelope** on (cost, acc) by removing
+   any baseline dominated by another baseline.
+3. Runs an **iso-cost analysis** for the target mode against that envelope:
+   - tolerance-band match (within `iso_tolerance` of dynamic's cost), or
+   - linear interpolation between adjacent envelope points, or
+   - nearest-point fallback marked `comparable=False`.
+4. Runs a **dominance analysis** flagging baselines that dominate the
+   target on (cost, acc) and on (cost, acc, p50-latency).
+5. Applies the **dominance-first success rule**:
+   - if any baseline dominates -> FAIL ("dominated_by_baseline")
+   - else require iso-cost comparable AND `delta_acc >= +0.03`.
+6. Reports a **best-under-budget** table at the requested budget cutoffs
+   (default `0.00026, 0.00030, 0.00040`), saying which mode wins under
+   each cost ceiling.
+7. Emits `<out_prefix>.json`, `<out_prefix>.md`, and one
+   `<out_prefix>_cost_acc_<dataset>.png` scatter plot per dataset.
+
+Used by `run_expanded_7b.sh` (round-level final compare) and the per-seed
+compare scripts under `scripts/`.
+"""
 
 from __future__ import annotations
 
