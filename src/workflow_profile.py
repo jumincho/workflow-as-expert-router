@@ -4,7 +4,7 @@ A workflow here is a *method* applied to a *base model* — not just a model
 choice. The pilot's whole question was whether choosing this larger unit
 (method + base) is a better routing decision than choosing a model alone.
 
-Six workflows are registered, covering three methods on two local
+Six workflows are registered, covering four methods on two local
 endpoints (a general 7B model and a coder 7B model):
 
 - `wf_io_general`            : one-shot answer on the general model.
