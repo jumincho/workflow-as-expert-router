@@ -1,4 +1,30 @@
-"""Round pre-analysis utilities for feedback-driven diagnostics."""
+"""Per-round diagnostic: where exactly does dynamic disagree with cheap?
+
+When the headline iso-cost test (`compare_runs`) said "dynamic and the
+cheap static baseline are roughly tied", we needed to know *why* — the
+"feedback-driven diagnostics" stage of every round. This file is that.
+
+For a run prefix like `round6r1` or `round7r2` and seeds 1/2/3 it pulls
+each seed's `logs/sample_trace.jsonl` from the configured runs and computes:
+
+- **Confusion table** on MBPP between `wae_dynamic` and `wae_static_cheap`:
+  `both_pass`, `both_fail`, `dynamic_only_pass`, `static_only_pass`. The
+  last two cells are the diagnostic ones — they say where dynamic actually
+  bought something and where it actively hurt.
+- **Top-k hard cases** where dynamic failed and cheap passed, ordered by
+  retry pressure and per-sample cost — the cases that should have been
+  routed to the premium workflow but were not.
+- **Forced-IO path differences**: for the `wae_dynamic_control_forced_io_general`
+  control, list queries where dynamic's chosen workflow / endpoint-call count
+  / retry count differed from the forced-IO baseline.
+- **Selection histograms**: which workflow id dynamic actually picked, by
+  dataset.
+- **Oracle headroom**: assuming a perfect picker between cheap and premium
+  static workflows, how much better than cheap would routing be? This is
+  the ceiling that dynamic was implicitly chasing.
+
+Writes a JSON + a markdown summary side-by-side under `<output_prefix>.json/.md`.
+"""
 
 from __future__ import annotations
 
@@ -252,4 +278,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

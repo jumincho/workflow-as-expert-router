@@ -1,4 +1,42 @@
-"""Runtime patching utilities and WaE router implementation."""
+"""MasRouter patch + WaERouter — workflow-aware variant of the upstream router.
+
+Three responsibilities, all glued to the external MasRouter (`MAR`) package:
+
+- `EndpointManager` loads `config/model_endpoints*.yaml`, builds an
+  `EndpointLLM` per declared model, registers per-token prices into
+  `MAR.LLM.price.MODEL_PRICE`, and warms each endpoint up
+  (`models.list` + a tiny chat completion). It also reports
+  *heterogeneity* (>=2 unique model ids and >=2 unique base URLs), which
+  the runner uses to refuse silently degenerate setups.
+
+- `LLMRuntimePatch` monkey-patches `MAR.LLM.llm_registry.LLMRegistry.get`
+  so that:
+    * a plain endpoint name (e.g. `local-coder`) yields the corresponding
+      `EndpointLLM`;
+    * a workflow id prefixed `wf::<id>` yields a `WorkflowLLM` that
+      executes the workflow against its base endpoint.
+  This is what lets MasRouter "see" workflows where it previously saw
+  models. `install()` is idempotent; `uninstall()` restores the upstream
+  classmethod cleanly.
+
+- `WaERouter(MasRouter)` is the actual router. On top of MasRouter's task
+  / collab / role allocation it adds:
+    * a VAE encoder for the *workflow* embedding,
+    * role-conditioned workflow scoring restricted to each workflow's
+      `allowed_roles`,
+    * optional `workflow_prior` mixing (`WAE_ROUTER_GREEDY` /
+      `WAE_ROUTER_GREEDY_ALL` env switches for greedy ablations),
+    * a `force_workflow_id` knob used to implement the
+      `wae_static_cheap` / `wae_static_premium` / `wae_dynamic_control_forced_io`
+      modes without forking the router.
+  Per-sample debug rows (chosen workflow id, endpoint name, model id,
+  prompt/output hashes, token counts, latency, retry counters) are
+  emitted alongside MasRouter's normal outputs so the comparison stage
+  has a faithful audit trail.
+
+`default_workflow_candidates()` exposes the catalog in
+`workflow_profile.py` for the runner.
+"""
 
 from __future__ import annotations
 

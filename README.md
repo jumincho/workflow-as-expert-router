@@ -10,7 +10,7 @@
 ![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)
 ![Closure](https://img.shields.io/badge/closure-2026--03-blue)
 
-**한국어** · [English](#english)
+**한국어** · [English](#english) · [中文](./README.zh-CN.md)
 
 </div>
 
@@ -46,6 +46,7 @@
 
 ## 다시 들여다볼 때는 어디부터
 
+- 📖 [`GLOSSARY.md`](GLOSSARY.md) — 코드와 종료 보고서에 등장하는 내부 용어(`MAR`/MasRouter, `wf_io_general` 등 워크플로우 id, `round7r2`/`expanded_7b` 같은 라운드명, `status/` 스냅샷 포맷, 환경변수, 비용 일치 비교 등)를 일반어로 풀어놓은 사전
 - [`docs/EXPERIMENT_OVERVIEW.md`](docs/EXPERIMENT_OVERVIEW.md) — 이 연구가 비교한 것이 정확히 무엇인지
 - [`docs/HANDOFF_RUNBOOK.md`](docs/HANDOFF_RUNBOOK.md) — 다시 돌리는 절차
 - [`docs/KNOWN_ISSUES_AND_FIXES.md`](docs/KNOWN_ISSUES_AND_FIXES.md) — 반복적으로 빠지던 함정들
@@ -78,6 +79,7 @@
 ├── artifacts/round7r2/        마지막 라운드의 비교 산출물 (일부)
 ├── artifacts/snapshots/       진행 스냅샷 JSON
 ├── closure_reports/           종료 보고서 (한국어 / 영문)
+├── GLOSSARY.md                내부 용어 사전
 └── launch_vllm.sh / setup_env.sh / stop_vllm.sh / run_expanded_7b.sh
 ```
 
@@ -143,6 +145,7 @@ The intended conclusion ("dynamic workflow routing cleanly beats static baseline
 
 ### Where to look first when revisiting
 
+- 📖 [`GLOSSARY.md`](GLOSSARY.md) — Decoder ring for the internal vocabulary that survived into the source tree and the closure reports (`MAR` / MasRouter, the four candidate workflows, the `wf_*` id naming, round names like `round7r2` / `expanded_7b`, `status/` snapshot format, env vars, cost-matched comparison rules).
 - [`docs/EXPERIMENT_OVERVIEW.md`](docs/EXPERIMENT_OVERVIEW.md) — what was compared, exactly.
 - [`docs/HANDOFF_RUNBOOK.md`](docs/HANDOFF_RUNBOOK.md) — how to resume.
 - [`docs/KNOWN_ISSUES_AND_FIXES.md`](docs/KNOWN_ISSUES_AND_FIXES.md) — recurring pitfalls.
@@ -175,6 +178,7 @@ The intended conclusion ("dynamic workflow routing cleanly beats static baseline
 ├── artifacts/round7r2/        partial outputs from the last round
 ├── artifacts/snapshots/       progress-snapshot JSONs
 ├── closure_reports/           closure reports (KO / EN)
+├── GLOSSARY.md                internal-vocabulary decoder ring
 └── launch_vllm.sh / setup_env.sh / stop_vllm.sh / run_expanded_7b.sh
 ```
 

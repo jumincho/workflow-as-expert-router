@@ -1,4 +1,21 @@
-"""Aggregate pilot run outputs and compute iso-cost improvement signal."""
+"""Quick scan of the runs directory to compute a first-pass iso-cost signal.
+
+This is the "did it look like dynamic helped at all" smoke test, written
+to be cheap to run from the command line after a fresh round finishes:
+
+1. For each of the four required modes (`masrouter`, `wae_dynamic`,
+   `wae_static_cheap`, `wae_static_premium`), find the latest matching
+   run under `WAE_RUNS_ROOT` by sorted filename.
+2. Read each run's `metrics/summary.json`.
+3. For each evaluation dataset (`mbpp_eval`, `humaneval_eval`) pick the
+   *nearest cost* baseline to dynamic and report `acc_dynamic - acc_baseline`.
+4. Mark the dataset as passing if that delta >= +0.03.
+
+This is intentionally a lower-fidelity check than `compare_runs.py`; for
+the final pass/fail call (with envelope + tolerance band + dominance) use
+`compare_runs.py`. Output goes to `WAE_ANALYSIS_OUTPUT` (default
+`<runs_root>/analysis_latest.json`) and is also printed to stdout.
+"""
 
 from __future__ import annotations
 
@@ -79,4 +96,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

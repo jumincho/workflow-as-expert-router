@@ -1,4 +1,41 @@
-"""WaE-Router pilot runner."""
+"""Main experiment runner for the WaE-Router pilot.
+
+End-to-end orchestration of one routing mode against one set of evaluation
+benchmarks. A single invocation:
+
+1. Boots `EndpointManager` against `config/model_endpoints*.yaml`, warms
+   each declared vLLM endpoint, and (optionally) refuses to proceed if
+   the endpoint set is not heterogeneous (>=2 distinct model ids /
+   base URLs).
+2. Installs `LLMRuntimePatch` so MasRouter's `LLMRegistry.get` resolves
+   `wf::<id>` entries to `WorkflowLLM` and bare endpoint names to
+   `EndpointLLM`.
+3. Loads MBPP and HumanEval splits (train + eval), runs the offline
+   role-conditioned Pareto calibration (`offline_pareto_builder`), and
+   trains / re-uses a `WaERouter` according to the `--mode` flag:
+     - `masrouter`                 — stock model-level routing baseline.
+     - `wae_dynamic`               — workflow-aware router.
+     - `wae_static_cheap`          — force the cheap workflow everywhere.
+     - `wae_static_premium`        — force the premium workflow everywhere.
+     - `wae_dynamic_*` (no_premium, prior_gated, roi_gated, hardcase_gate,
+       cheap_first_escalate)       — ablations of the dynamic policy.
+4. Evaluates on MBPP and HumanEval, recording per-sample passes,
+   latency breakdowns (router overhead / LLM inference / test exec),
+   prompt and output hashes, retry counters, and the chosen workflow id.
+5. Writes `runs/<run_id>/metrics/summary.json`, `report.md`, sample
+   traces under `logs/`, and a heartbeat status file consumed by
+   `monitor.PilotMonitor`. Companion outputs (compare reports, plots,
+   round-level P0 diagnostics) are produced by `compare_runs.py` and
+   `analyze_round_p0.py` against the directories this runner produces.
+
+The runner depends on the upstream `MAR` (MasRouter) package which is
+*not* vendored; the `MASROUTER_PATH` env var points to a separate
+checkout (default `/workspace/masrouter`). All output paths default
+to `WAE_ROUTER_PILOT_ROOT/runs/` (override with `WAE_RUNS_ROOT`).
+
+See GLOSSARY.md for the env vars, the mode labels, and the snapshot
+formats consumed by `monitor.py` and `compare_runs.py`.
+"""
 
 from __future__ import annotations
 
