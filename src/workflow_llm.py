@@ -1,4 +1,44 @@
-"""Workflow-level LLM wrappers used by WaE-Router pilot."""
+"""Workflow-as-LLM wrappers exposing a *workflow* through the MAR LLM interface.
+
+This module turns "pick a workflow" into "pick an LLM" by giving each
+candidate workflow the same `gen()` / `agen()` shape that MasRouter expects
+from a single endpoint. The router can then drop a workflow into the slot
+that used to hold a model name without any further plumbing.
+
+Two classes:
+
+- `EndpointLLM` — OpenAI-compatible client for one local vLLM endpoint
+  (`local-general`, `local-coder`, ...). Handles retries on
+  `BadRequestError`, halves `max_tokens` or truncates `Your code should
+  pass these tests` blocks when the server reports the context-length
+  ceiling, and records per-call telemetry (`prompt_tokens`,
+  `completion_tokens`, `overflow_retries`, `context_trim_retries`,
+  `prompt_hash`, `output_hash`, ...). Cost is accumulated through MAR's
+  `cost_count`.
+- `WorkflowLLM` — the wrapper. It looks up its `base_model` endpoint, then
+  dispatches on `workflow_def['method']`:
+    - `io`                : one-shot.
+    - `refine2`           : draft then revise (answer-then-refine).
+    - `self_consistency3` : k samples, syntax-aware pick.
+    - `critique_refine`   : draft, critique, then rewrite (critique+rewrite).
+    - `gen_test_select3`  : generate k candidates and select the first one
+                            that passes inline tests (candidate+compare),
+                            with an optional one-shot Python syntax repair
+                            and an optional "no tests -> fall back to IO".
+  `last_trace` accumulates per-call telemetry across the sub-steps so the
+  router can emit a single faithful audit row per query.
+
+Module-level helpers:
+
+- `extract_python_code`, `extract_inline_tests*`, `is_python_syntax_valid`
+  — prompt parsing for the `gen_test_select3` path.
+- `snapshot_runtime_telemetry` / `reset_runtime_telemetry`
+  — process-wide counters used by `run_pilot.py` to attribute retries
+    and endpoint calls per evaluation sample.
+
+See GLOSSARY → "The four candidate workflows" and "workflow_llm" for the
+plain-English names.
+"""
 
 from __future__ import annotations
 
