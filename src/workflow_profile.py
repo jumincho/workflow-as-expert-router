@@ -1,4 +1,35 @@
-"""Workflow-as-Expert profile definitions for the WaE pilot."""
+"""Catalog of candidate *workflows* the WaE router can choose between.
+
+A workflow here is a *method* applied to a *base model* — not just a model
+choice. The pilot's whole question was whether choosing this larger unit
+(method + base) is a better routing decision than choosing a model alone.
+
+Six workflows are registered, covering three methods on two local
+endpoints (a general 7B model and a coder 7B model):
+
+- `wf_io_general`            : one-shot answer on the general model.
+- `wf_refine2_coder`         : answer-then-refine on the coder model.
+- `wf_sc3_coder`             : 3-sample self-consistency on the coder model.
+- `wf_gen3_test_select_coder`: candidate+compare with inline tests (k=3, coder).
+- `wf_gen2_test_select_general`: cheaper candidate+compare on the general model (k=2).
+- `wf_gen3_test_select_general`: candidate+compare with inline tests (k=3, general).
+
+Each entry carries:
+
+- `method`         — selects which `WorkflowLLM._run_*` branch executes
+                     (`io`, `refine2`, `self_consistency3`, `gen_test_select3`,
+                     plus `critique_refine` exposed via the wrapper).
+- `base_model`     — endpoint name resolved through `EndpointManager`.
+- `allowed_roles`  — MasRouter role names this workflow is eligible for.
+- `budget_tier`    — `cheap` / `balanced` / `premium`; used to gate exclusion.
+- `cost_profile`   — per-token prices fed into `MODEL_PRICE`.
+
+`workflow_map()` returns these keyed by id, and
+`select_workflows_by_tier()` filters by `budget_tier` for ablations.
+
+See GLOSSARY.md → "The four candidate workflows" for plain-English names
+and how the closure reports refer to them.
+"""
 
 from __future__ import annotations
 
