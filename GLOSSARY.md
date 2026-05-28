@@ -36,8 +36,7 @@ The six concrete workflow profiles registered in `WORKFLOW_PROFILE`:
 | Term | What it means |
 |---|---|
 | **MasRouter** | The external multi-agent router this project builds on. It picks a task domain, a reasoning collab pattern, a set of roles, and an LLM per role. The WaE pilot replaces *the LLM choice* with a *workflow choice*. |
-| **`MAR`** | The Python package name of MasRouter. Imports like `from MAR.MasRouter.mas_router import MasRouter` come from a separate checkout pointed to by `MASROUTER_PATH`. |
-| **Why it's not vendored** | MasRouter has its own license, evolves independently, and ships large prompt/role JSONs that don't belong in this pilot. We patch `LLMRegistry.get` at runtime instead of forking the package. The `requirements.txt` here also deliberately does not install it. |
+| **`MAR`** | The Python package name of MasRouter. It is an external dependency — imports like `from MAR.MasRouter.mas_router import MasRouter` come from a separate checkout pointed to by `MASROUTER_PATH`, and `requirements.txt` here does not install it. |
 
 ## Internal modules under `src/` — what each owns
 
@@ -136,26 +135,14 @@ subprocess timeout.
 | **Pareto envelope** | The non-dominated subset of baselines on (cost, acc). The iso-cost test runs against this envelope, not the full baseline set. |
 | **Oracle headroom** | In `analyze_round_p0.py`: assuming a perfect picker between cheap and premium static workflows, how much would routing gain over cheap alone? Upper-bound for any dynamic policy. |
 
-## Shell helpers — why these are separate from the Python flow
-
-The four scripts at the repo root deliberately stay outside the Python flow
-because they control infrastructure that the runner cannot control safely:
+## Shell helpers
 
 | Script | What it does |
 |---|---|
 | `setup_env.sh` | One-time project bootstrap. Creates `.venv/` with `--system-site-packages`, installs `requirements.txt`, installs vLLM, and runs an import smoke test for the heavyweight deps (`torch`, `vllm`, `datasets`, `openai`, ...). Run once per host. |
-| `launch_vllm.sh` | Spawns three vLLM servers on `:8000` (Qwen2.5-7B-Instruct as `general`), `:8001` (Qwen2.5-Coder-7B-Instruct as `coder`), `:8002` (Qwen2.5-Math-7B-Instruct as `math`), each on a separate CUDA device, and writes PID files into `runs/`. Requires `HUGGINGFACE_HUB_TOKEN` for model fetch. This is the serving substrate — it lives outside Python because it's a long-running daemon set, not part of the experiment graph. |
+| `launch_vllm.sh` | Spawns three vLLM servers on `:8000` (Qwen2.5-7B-Instruct as `general`), `:8001` (Qwen2.5-Coder-7B-Instruct as `coder`), `:8002` (Qwen2.5-Math-7B-Instruct as `math`), each on a separate CUDA device, and writes PID files into `runs/`. Requires `HUGGINGFACE_HUB_TOKEN` for model fetch. |
 | `stop_vllm.sh` | Reads the PID files `launch_vllm.sh` wrote and kills each server. |
-| `run_expanded_7b.sh` | One canned 7B-pinned comparison sweep: masrouter / wae_dynamic / wae_static_cheap / wae_static_premium against `config/model_endpoints_3x7b.yaml`, followed by `compare_runs.py`. Separate from the per-round scripts under `scripts/` because the 7B set has different sample budgets and a different `--require_heterogeneous_endpoints` constraint. |
+| `run_expanded_7b.sh` | One canned 7B-pinned comparison sweep: masrouter / wae_dynamic / wae_static_cheap / wae_static_premium against `config/model_endpoints_3x7b.yaml`, followed by `compare_runs.py`. |
 
 The Python entry points (`run_pilot.py`, `compare_runs.py`, etc.) all assume
-the vLLM servers are already up. The shell scripts are the only thing that
-brings them up.
-
-## Why the round / version suffixes are kept in filenames
-
-Closure reports, snapshot JSONs, and per-round comparison outputs cross-reference
-each other by on-disk path (`artifacts/round7r2/round7r2_s1_compare_dynamic.md`,
-`status/ROUND7R2_PROGRESS.md`, ...). Renaming the files would silently break
-those cross-references and the historical record they constitute. The naming
-convention is preserved as-is; this glossary is the bridge.
+the vLLM servers are already up.
