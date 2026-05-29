@@ -5,7 +5,6 @@
 1. Confirm VLLM endpoints are reachable:
 - `http://127.0.0.1:8000/v1`
 - `http://127.0.0.1:8001/v1`
-- `http://127.0.0.1:8002/v1`
 
 2. Confirm no stale process before restart:
 ```bash
@@ -19,10 +18,11 @@ nvidia-smi
 
 ## B. Resume Round7r2
 
-Run from `/workspace/wae_router_pilot` with existing `.venv`:
+Run from `${WAE_ROUTER_PILOT_ROOT:-/workspace/wae_router_pilot}` with existing `.venv`:
 ```bash
 source .venv/bin/activate
-PYTHONPATH=/workspace/wae_router_pilot:/workspace/masrouter \
+WAE_ROUTER_PILOT_ROOT="${WAE_ROUTER_PILOT_ROOT:-/workspace/wae_router_pilot}" \
+MASROUTER_PATH="${MASROUTER_PATH:-/workspace/masrouter}" \
 ROUND_PREFIX=round7r2 \
 RUN_STAGE_A=0 \
 MAS_CURVE_ONLY_SEED1=1 \
@@ -36,12 +36,12 @@ RUN_MAX_RETRIES=1 \
 ## C. Live Monitoring
 
 ```bash
-tail -f /workspace/wae_router_pilot/runs/round7r2_orchestrator.log
+tail -f "${WAE_ROUTER_PILOT_ROOT:-/workspace/wae_router_pilot}/runs/round7r2_orchestrator.log"
 ```
 
 Check one run status directly:
 ```bash
-cat /workspace/wae_router_pilot/runs/<run_id>/logs/status.json
+cat "${WAE_ROUTER_PILOT_ROOT:-/workspace/wae_router_pilot}/runs/<run_id>/logs/status.json"
 ```
 
 ## D. Completion Criteria
@@ -53,6 +53,6 @@ cat /workspace/wae_router_pilot/runs/<run_id>/logs/status.json
 ## E. Post-run Cleanup
 
 ```bash
-bash /workspace/wae-router-round7-handoff/stop_vllm.sh
+bash "${WAE_ROUTER_PILOT_ROOT:-/workspace/wae_router_pilot}/stop_vllm.sh"
 ```
 
