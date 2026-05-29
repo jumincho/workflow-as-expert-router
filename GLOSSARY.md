@@ -140,7 +140,7 @@ subprocess timeout.
 | Script | What it does |
 |---|---|
 | `setup_env.sh` | One-time project bootstrap. Creates `.venv/` with `--system-site-packages`, installs `requirements.txt`, installs vLLM, and runs an import smoke test for the heavyweight deps (`torch`, `vllm`, `datasets`, `openai`, ...). Run once per host. |
-| `launch_vllm.sh` | Spawns three vLLM servers on `:8000` (Qwen2.5-7B-Instruct as `general`), `:8001` (Qwen2.5-Coder-7B-Instruct as `coder`), `:8002` (Qwen2.5-Math-7B-Instruct as `math`), each on a separate CUDA device, and writes PID files into `runs/`. Requires `HUGGINGFACE_HUB_TOKEN` for model fetch. |
+| `launch_vllm.sh` | Spawns two vLLM servers on `:8000` (Qwen2.5-7B-Instruct as `general`) and `:8001` (Qwen2.5-Coder-7B-Instruct as `coder`), each on a separate CUDA device, and writes PID files into `runs/`. Requires `HUGGINGFACE_HUB_TOKEN` for model fetch. |
 | `stop_vllm.sh` | Reads the PID files `launch_vllm.sh` wrote and kills each server. |
 | `run_expanded_7b.sh` | One canned 7B-pinned comparison sweep: masrouter / wae_dynamic / wae_static_cheap / wae_static_premium against `config/model_endpoints_3x7b.yaml`, followed by `compare_runs.py`. |
 
