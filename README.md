@@ -16,6 +16,12 @@
 
 > 🧊 **휴면(dormant) 중인 연구 파일럿입니다.**
 
+## ⭐ 핵심 결과 (TL;DR)
+
+- **흐름(workflow) 단위로 expert를 라우팅한다는 아이디어는 효과가 재현됐습니다** — 같은 정확도에서 모델-단위 라우팅보다 비용·지연이 의미 있게 줄었습니다.
+- 그러나 **"동적 흐름 선택 자체가 핵심"이라는 더 강한 주장은 못 닫았습니다** — 값싼 흐름 하나만 쓰는 정적 baseline이 의외로 강했습니다.
+- 즉 **시스템 패턴으로는 살아남았고, 동적 라우팅 헤드라인은 더 좁게 재framing해야** 하는 상태입니다.
+
 ## 무엇을 보려던 연구였나
 
 요즘 LLM 시스템은 종종 "어떤 모델에게 이 질문을 넘길까?" 를 자동으로 고릅니다. 이 프로젝트는 한 걸음 더 들어가, **모델만 고르는 게 아니라 "어떤 흐름(workflow)으로 풀게 할까"까지 같이 고르자** 는 아이디어를 검증한 연구입니다.
@@ -114,6 +120,12 @@ bash launch_vllm.sh   # 별도 서빙 환경이 떠 있어야 합니다
 ## English
 
 > 🧊 **Dormant research pilot.**
+
+### ⭐ Key result (TL;DR)
+
+- **Routing whole workflows (not just models) as experts reproduced a real gain** — meaningfully lower cost/latency at matched accuracy vs. model-level routing.
+- But the **stronger claim ("dynamic workflow choice is the core driver") didn't close** — a static "one cheap workflow" baseline was surprisingly strong.
+- So: **the systems pattern survives; the dynamic-routing headline needs a narrower reframing.**
 
 ### What this set out to test
 
